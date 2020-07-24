@@ -1,0 +1,29 @@
+
+INCLUDE=C:\vshare\ww\dev\WWitch\include
+LIB= ..\..\USR\COMMON
+LINK=/NOD /NOI /MAP
+
+STARTUP=..\startup\vc15_rt.obj
+LIBS=libww.lib
+
+CFLAGS=/ASw /O /Gs
+# /ND_DATA /NT_TEXT
+# /NDDGROUP /NTCGROUP /G1
+
+all:	hello.fx
+
+hello.fx:	hello.bin
+	mkfent hello.cf
+
+hello.bin:	hello.obj
+	..\bin\link @<<
+$(LINK) $(STARTUP) hello.obj,hello.sss,hello.map,$(LIBS);
+<<
+	echo 0000 >0000.sss
+	exe2bin hello.sss hello.bin <0000.sss
+	echo remove temp file
+	del 0000.sss
+
+hello.obj:	hello.c
+	..\bin\cl -c $(CFLAGS) hello.c
+
